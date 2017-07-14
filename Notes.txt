@@ -1,0 +1,7 @@
+# https://www.elastic.co/guide/index.html
+# https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
+# https://www.elastic.co/guide/en/kibana/current/_configuring_kibana_on_docker.html
+# https://www.elastic.co/guide/en/logstash/current/_pulling_the_image.html
+# https://hub.docker.com/r/graylog/graylog/
+# https://hub.docker.com/r/graylog2/server/
+
