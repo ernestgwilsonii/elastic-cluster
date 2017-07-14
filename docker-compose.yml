@@ -3,7 +3,6 @@ version: '3.3'
 services:
 
   es_n1:
-    container_name: es_n1
     image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
     volumes:
       - esdata1:/usr/share/elasticsearch/data
@@ -11,6 +10,9 @@ services:
       - mode: host
         target: 9200
         published: 9200
+      - mode: host
+        target: 9300
+        published: 9300
     networks:
       - esnet1
     environment:
@@ -34,7 +36,6 @@ services:
           - node.labels.es.node == 1
 
   es_n2:
-    container_name: es_n2
     image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
     volumes:
       - esdata2:/usr/share/elasticsearch/data
@@ -42,6 +43,9 @@ services:
       - mode: host
         target: 9200
         published: 9200
+      - mode: host
+        target: 9300
+        published: 9300
     networks:
       - esnet1
     environment:
@@ -66,7 +70,6 @@ services:
           - node.labels.es.node == 2
 
   es_n3:
-    container_name: es_n3
     image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
     volumes:
       - esdata3:/usr/share/elasticsearch/data
@@ -74,6 +77,9 @@ services:
       - mode: host
         target: 9200
         published: 9200
+      - mode: host
+        target: 9300
+        published: 9300
     networks:
       - esnet1
     environment:
@@ -98,7 +104,6 @@ services:
           - node.labels.es.node == 3
 
   es_n4:
-    container_name: es_n4
     image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
     volumes:
       - esdata4:/usr/share/elasticsearch/data
@@ -106,6 +111,9 @@ services:
       - mode: host
         target: 9200
         published: 9200
+      - mode: host
+        target: 9300
+        published: 9300
     networks:
       - esnet1
     environment:
@@ -130,7 +138,6 @@ services:
           - node.labels.es.node == 4
 
   es_n5:
-    container_name: es_n5
     image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
     volumes:
       - esdata5:/usr/share/elasticsearch/data
@@ -138,6 +145,9 @@ services:
       - mode: host
         target: 9200
         published: 9200
+      - mode: host
+        target: 9300
+        published: 9300
     networks:
       - esnet1
     environment:
