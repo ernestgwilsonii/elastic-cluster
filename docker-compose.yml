@@ -1,0 +1,178 @@
+version: '3.3'
+
+services:
+
+  es_n1:
+    container_name: es_n1
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - mode: host
+        target: 9200
+        published: 9200
+    networks:
+      - esnet1
+    environment:
+      - cluster.name=es-cluster1
+      - bootstrap.memory_lock=false
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    deploy:
+      resources:
+        limits:
+          memory: 4096M
+        reservations:
+          memory: 2048M
+      labels:
+        local.description: "Elasticsearch Node 1 part of Cluster 1"
+      placement:
+        constraints:
+          - node.labels.es.node == 1
+
+  es_n2:
+    container_name: es_n2
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
+    volumes:
+      - esdata2:/usr/share/elasticsearch/data
+    ports:
+      - mode: host
+        target: 9200
+        published: 9200
+    networks:
+      - esnet1
+    environment:
+      - cluster.name=es-cluster1
+      - bootstrap.memory_lock=false
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+      - "discovery.zen.ping.unicast.hosts=es_n1"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    deploy:
+      resources:
+        limits:
+          memory: 4096M
+        reservations:
+          memory: 2048M
+      labels:
+        local.description: "Elasticsearch Node 2 part of Cluster 1"
+      placement:
+        constraints:
+          - node.labels.es.node == 2
+
+  es_n3:
+    container_name: es_n3
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
+    volumes:
+      - esdata3:/usr/share/elasticsearch/data
+    ports:
+      - mode: host
+        target: 9200
+        published: 9200
+    networks:
+      - esnet1
+    environment:
+      - cluster.name=es-cluster1
+      - bootstrap.memory_lock=false
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+      - "discovery.zen.ping.unicast.hosts=es_n1"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    deploy:
+      resources:
+        limits:
+          memory: 4096M
+        reservations:
+          memory: 2048M
+      labels:
+        local.description: "Elasticsearch Node 3 part of Cluster 1"
+      placement:
+        constraints:
+          - node.labels.es.node == 3
+
+  es_n4:
+    container_name: es_n4
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
+    volumes:
+      - esdata4:/usr/share/elasticsearch/data
+    ports:
+      - mode: host
+        target: 9200
+        published: 9200
+    networks:
+      - esnet1
+    environment:
+      - cluster.name=es-cluster1
+      - bootstrap.memory_lock=false
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+      - "discovery.zen.ping.unicast.hosts=es_n1"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    deploy:
+      resources:
+        limits:
+          memory: 4096M
+        reservations:
+          memory: 2048M
+      labels:
+        local.description: "Elasticsearch Node 4 part of Cluster 1"
+      placement:
+        constraints:
+          - node.labels.es.node == 4
+
+  es_n5:
+    container_name: es_n5
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
+    volumes:
+      - esdata5:/usr/share/elasticsearch/data
+    ports:
+      - mode: host
+        target: 9200
+        published: 9200
+    networks:
+      - esnet1
+    environment:
+      - cluster.name=es-cluster1
+      - bootstrap.memory_lock=false
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+      - "discovery.zen.ping.unicast.hosts=es_n1"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    deploy:
+      resources:
+        limits:
+          memory: 4096M
+        reservations:
+          memory: 2048M
+      labels:
+        local.description: "Elasticsearch Node 5 part of Cluster 1"
+      placement:
+        constraints:
+          - node.labels.es.node == 5
+
+volumes:
+  esdata1:
+    driver: local
+  esdata2:
+    driver: local
+  esdata3:
+    driver: local
+  esdata4:
+    driver: local
+  esdata5:
+    driver: local
+
+networks:
+  esnet1:
+
