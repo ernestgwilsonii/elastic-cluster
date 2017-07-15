@@ -5,3 +5,13 @@
 # https://hub.docker.com/r/graylog/graylog/
 # https://hub.docker.com/r/graylog2/server/
 
+# Elasticsearch with XPack default username and password:
+# elastic / changeme 
+# REF: https://www.elastic.co/guide/en/x-pack/current/security-getting-started.html
+curl -u elastic:changeme 'http://10.75.131.14:9200/_cat/health?v' # Get health
+curl -u elastic:changeme 'http://10.75.131.14:9200/_cat/nodes?v' # Get nodes
+curl -u elastic:changeme 'http://10.75.131.14:9200/_cat/indices?v' # Get indices
+curl -u elastic:changeme -XGET 'http://10.75.131.14:9200/_cluster/health?pretty=true'
+curl -u elastic:changeme -XGET 'http://10.75.131.14:9200/_cluster/state?pretty'
+curl -u elastic:changeme -XGET http://10.75.131.14:9200/_cluster/settings?pretty
+
