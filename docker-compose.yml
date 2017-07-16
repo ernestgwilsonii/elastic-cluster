@@ -145,6 +145,8 @@ services:
       - mode: host
         target: 5601
         published: 5601
+    networks:
+      - esnet1
     environment:
       - "SERVER_NAME=kibana_n1"
       - "ELASTICSEARCH_URL=http://10.75.131.12:9200"
@@ -166,6 +168,8 @@ services:
       - mode: host
         target: 5601
         published: 5601
+    networks:
+      - esnet1
     environment:
       SERVER_NAME: 10.75.131.13
       ELASTICSEARCH_URL: http://10.75.131.13:9200
@@ -186,6 +190,8 @@ services:
       - mode: host
         target: 5601
         published: 5601
+    networks:
+      - esnet1
     environment:
       SERVER_NAME: 10.75.131.14
       ELASTICSEARCH_URL: http://10.75.131.14:9200
