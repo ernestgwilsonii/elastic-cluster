@@ -11,7 +11,6 @@ services:
 
   es_n1:
     hostname: es_n1
-    restart: always
     image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
     volumes:
       - esdata1:/usr/share/elasticsearch/data
@@ -29,8 +28,8 @@ services:
       - cluster.name=es-cluster1
       - bootstrap.memory_lock=false
       - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
-      - discovery.zen.ping.unicast.hosts=es_n3,es_n2
-      - discovery.zen.minimum_master_nodes=2
+      - discovery.zen.ping.unicast.hosts=es_n5,es_n4,es_n3,es_n2
+      - discovery.zen.minimum_master_nodes=3
       - xpack.security.audit.enabled=true # https://www.elastic.co/guide/en/x-pack/current/auditing.html
     ulimits:
       memlock:
@@ -51,7 +50,6 @@ services:
 
   es_n2:
     hostname: es_n2
-    restart: always
     image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
     volumes:
       - esdata2:/usr/share/elasticsearch/data
@@ -69,8 +67,8 @@ services:
       - cluster.name=es-cluster1
       - bootstrap.memory_lock=false
       - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
-      - discovery.zen.ping.unicast.hosts=es_n1,es_n3
-      - discovery.zen.minimum_master_nodes=2
+      - discovery.zen.ping.unicast.hosts=es_n1,es_n3,es_n4,es_n5
+      - discovery.zen.minimum_master_nodes=3
       - xpack.security.audit.enabled=true
     ulimits:
       memlock:
@@ -91,7 +89,6 @@ services:
 
   es_n3:
     hostname: es_n3
-    restart: always
     image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
     volumes:
       - esdata3:/usr/share/elasticsearch/data
@@ -109,8 +106,8 @@ services:
       - cluster.name=es-cluster1
       - bootstrap.memory_lock=false
       - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
-      - discovery.zen.ping.unicast.hosts=es_n1,es_n2
-      - discovery.zen.minimum_master_nodes=2
+      - discovery.zen.ping.unicast.hosts=es_n1,es_n2,es_n4,es_n5
+      - discovery.zen.minimum_master_nodes=3
       - xpack.security.audit.enabled=true
     ulimits:
       memlock:
@@ -129,6 +126,84 @@ services:
         constraints:
           - node.labels.es.node == 3
 
+  es_n4:
+    hostname: es_n4
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
+    volumes:
+      - esdata4:/usr/share/elasticsearch/data
+    ports:
+      - mode: host
+        target: 9200
+        published: 9200
+      - mode: host
+        target: 9300
+        published: 9300
+    networks:
+      - esnet1
+    environment:
+      - node.name=es_n4
+      - cluster.name=es-cluster1
+      - bootstrap.memory_lock=false
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+      - discovery.zen.ping.unicast.hosts=es_n1,es_n2,es_n3,es_n5
+      - discovery.zen.minimum_master_nodes=3
+      - xpack.security.audit.enabled=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 4096M
+        reservations:
+          memory: 2048M
+      labels:
+        local.description: "Elasticsearch Node 4 part of Cluster 1"
+      placement:
+        constraints:
+          - node.labels.es.node == 4
+
+  es_n5:
+    hostname: es_n5
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.5.0
+    volumes:
+      - esdata5:/usr/share/elasticsearch/data
+    ports:
+      - mode: host
+        target: 9200
+        published: 9200
+      - mode: host
+        target: 9300
+        published: 9300
+    networks:
+      - esnet1
+    environment:
+      - node.name=es_n5
+      - cluster.name=es-cluster1
+      - bootstrap.memory_lock=false
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+      - discovery.zen.ping.unicast.hosts=es_n1,es_n2,es_n3,es_n4
+      - discovery.zen.minimum_master_nodes=3
+      - xpack.security.audit.enabled=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 4096M
+        reservations:
+          memory: 2048M
+      labels:
+        local.description: "Elasticsearch Node 5 part of Cluster 1"
+      placement:
+        constraints:
+          - node.labels.es.node == 5
+
 
 ################################################################################
 # Kibana
@@ -137,18 +212,14 @@ services:
 ################################################################################
 
   kibana_n1:
-    env_file: .env
-    hostname: kibana_n1
-    restart: always
     image: docker.elastic.co/kibana/kibana:5.5.0
     ports:
       - mode: host
         target: 5601
         published: 5601
     environment:
-      - "SERVER_NAME=kibana_n1"
-      - "ELASTICSEARCH_URL=http://10.75.131.12:9200"
-#      - "ELASTICSEARCH_URL=${ELASTICSEARCH_URL_N1}"
+      SERVER_NAME: 10.75.131.12
+      ELASTICSEARCH_URL: http://10.75.131.12:9200
     deploy:
       replicas: 1
       labels:
@@ -158,9 +229,6 @@ services:
           - node.labels.es.node == 1
 
   kibana_n2:
-    env_file: .env
-    hostname: kibana_n2
-    restart: always
     image: docker.elastic.co/kibana/kibana:5.5.0
     ports:
       - mode: host
@@ -176,27 +244,6 @@ services:
       placement:
         constraints:
           - node.labels.es.node == 2
-
-  kibana_n3:
-    env_file: .env
-    hostname: kibana_n3
-    restart: always
-    image: docker.elastic.co/kibana/kibana:5.5.0
-    ports:
-      - mode: host
-        target: 5601
-        published: 5601
-    environment:
-      SERVER_NAME: 10.75.131.14
-      ELASTICSEARCH_URL: http://10.75.131.14:9200
-    deploy:
-      replicas: 1
-      labels:
-        local.description: "Kibana Node 3 part of Elasticsearch Cluster 1"
-      placement:
-        constraints:
-          - node.labels.es.node == 3
-
 
 ################################################################################
 # Docker Volumes
